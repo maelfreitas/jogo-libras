@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adivinhe o Sinal em LIBRAS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Qual é o sinal?</h1>
+
+<div id="jogo-container">
+    <div id="video-container">
+        <video id="sinal-video" src="" autoplay loop muted playsinline alt="Sinal em LIBRAS"></video>
+    </div>
+
+    <div id="opcoes-container">
+    </div>
+
+    <p id="feedback-texto"></p>
+    <p id="progresso-texto">Sinal 1 de 5</p>
+</div>
+
+<div id="placar-final-container" class="hidden">
+    <h2>Fim de Jogo!</h2>
+    <p id="placar-final-texto"></p>
+    <button id="jogar-novamente-btn">Jogar Novamente</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

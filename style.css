@@ -1,0 +1,94 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f8ff;
+    color: #333;
+    text-align: center;
+}
+
+#jogo-container, #placar-final-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: 90%;
+    max-width: 400px;
+}
+
+/* Apenas renomeamos o seletor aqui */
+#sinal-video {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    margin: 0 auto 20px auto;
+    display: block;
+}
+
+#opcoes-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.opcao-btn {
+    padding: 15px;
+    border: 1px solid #ddd;
+    background-color: #f8f9fa;
+    color: #333;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.opcao-btn:hover {
+    background-color: #e2e6ea;
+    border-color: #dae0e5;
+}
+
+.opcao-btn.correto {
+    background-color: #28a745;
+    color: white;
+    border-color: #28a745;
+}
+
+.opcao-btn.errado {
+    background-color: #dc3545;
+    color: white;
+    border-color: #dc3545;
+}
+
+button#jogar-novamente-btn {
+    padding: 10px 15px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button#jogar-novamente-btn:hover {
+    background-color: #0056b3;
+}
+
+#feedback-texto {
+    margin-top: 15px;
+    font-weight: bold;
+    min-height: 24px;
+}
+
+.hidden {
+    display: none;
+}
+
+#placar-final-texto {
+    font-size: 1.2em;
+}
