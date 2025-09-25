@@ -1,94 +1,147 @@
+/* --- GERAL & BODY --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #12182B; /* Azul marinho bem escuro */
+    color: #EAEAEA; /* Cor de texto principal (quase branco) */
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-color: #f0f8ff;
-    color: #333;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* --- CONTAINER PRINCIPAL DO JOGO --- */
+#jogo-container, #placar-final-container {
+    background-color: #1F2947; /* Tom de azul mais claro para o "card" */
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid #00A9FF;
+    box-shadow: 0 10px 30px rgba(0, 169, 255, 0.1);
+    display: flex;
+    flex-direction: column;
     text-align: center;
 }
 
-#jogo-container, #placar-final-container {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    width: 90%;
-    max-width: 400px;
+/* --- TÍTULOS E TEXTOS --- */
+h1, h2 {
+    color: #00A9FF; /* Azul vibrante de destaque */
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 20px;
 }
 
-/* Apenas renomeamos o seletor aqui */
+h1 {
+    font-size: 1.5em;
+    position: absolute;
+    top: 40px;
+}
+
+h2 {
+    font-size: 1.8em;
+}
+
+p#progresso-texto {
+    font-size: 0.9em;
+    color: #a0a0a0;
+    margin-top: 15px;
+}
+
+/* --- VÍDEO DO SINAL --- */
 #sinal-video {
     width: 100%;
-    max-width: 300px;
-    height: auto;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    margin: 0 auto 20px auto;
-    display: block;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    background-color: #000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
+/* --- BOTÕES DE OPÇÃO --- */
 #opcoes-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin: 20px 0;
+    grid-template-columns: 1fr; /* Apenas uma coluna para layout mobile */
+    gap: 12px;
 }
 
 .opcao-btn {
-    padding: 15px;
-    border: 1px solid #ddd;
-    background-color: #f8f9fa;
-    color: #333;
-    border-radius: 8px;
+    background-color: transparent;
+    border: 2px solid #00A9FF;
+    color: #EAEAEA;
+    padding: 18px;
+    border-radius: 12px;
+    font-size: 1em;
+    font-weight: 600;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s, border-color 0.3s;
+    transition: all 0.3s ease;
 }
 
-.opcao-btn:hover {
-    background-color: #e2e6ea;
-    border-color: #dae0e5;
+/* Efeito ao passar o mouse (para desktop) ou ao tocar */
+.opcao-btn:hover:not(:disabled) {
+    background-color: #00A9FF;
+    color: #12182B;
 }
 
+/* Estilo para quando os botões estão desabilitados após a resposta */
+.opcao-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* --- FEEDBACK VISUAL DAS RESPOSTAS --- */
 .opcao-btn.correto {
     background-color: #28a745;
-    color: white;
     border-color: #28a745;
+    color: #fff;
+    transform: scale(1.05); /* Efeito de "pop" para a resposta certa */
 }
 
 .opcao-btn.errado {
     background-color: #dc3545;
-    color: white;
     border-color: #dc3545;
-}
-
-button#jogar-novamente-btn {
-    padding: 10px 15px;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-button#jogar-novamente-btn:hover {
-    background-color: #0056b3;
+    color: #fff;
 }
 
 #feedback-texto {
-    margin-top: 15px;
-    font-weight: bold;
     min-height: 24px;
+    margin-top: 20px;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+
+/* --- TELA DE PLACAR FINAL --- */
+#placar-final-texto {
+    font-size: 1.2em;
+    margin-bottom: 25px;
+}
+
+#jogar-novamente-btn {
+    background-color: #00A9FF;
+    color: #12182B;
+    border: none;
+    padding: 18px;
+    border-radius: 12px;
+    font-size: 1.1em;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+#jogar-novamente-btn:hover {
+    box-shadow: 0 0 15px rgba(0, 169, 255, 0.5);
+    transform: translateY(-2px);
 }
 
 .hidden {
-    display: none;
-}
-
-#placar-final-texto {
-    font-size: 1.2em;
+    display: none !important;
 }
