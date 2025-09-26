@@ -1,4 +1,4 @@
-// --- 1. CONFIGURAÇÃO INICIAL ---
+// --- 1. CONFIGURAÇÃO INICIAL E ELEMENTOS DO DOM ---
 const jogoContainer = document.getElementById('jogo-container');
 const placarFinalContainer = document.getElementById('placar-final-container');
 const sinalVideo = document.getElementById('sinal-video');
@@ -8,22 +8,56 @@ const progressoTexto = document.getElementById('progresso-texto');
 const placarFinalTexto = document.getElementById('placar-final-texto');
 const jogarNovamenteBtn = document.getElementById('jogar-novamente-btn');
 
-// Aumente esta lista para ter mais variedade nas opções erradas!
-const TODOS_OS_SINAIS = [
-    { video: 'sinais/Abacaxi.mp4', resposta: 'Abacaxi' },
-    { video: 'sinais/Abraço.mp4', resposta: 'Abraço' },
-    { video: 'sinais/Academia.mp4', resposta: 'Academia' },
-    { video: 'sinais/Acenar.mp4', resposta: 'Acenar' }
-];
-
 const SINAIS_POR_RODADA = 5;
+
+// Estas variáveis serão preenchidas depois que a lista for carregada
+let TODOS_OS_SINAIS = [];
 let sinaisDaRodada = [];
 let indiceSinalAtual = 0;
 let acertos = 0;
 
-// --- 2. FUNÇÕES PRINCIPAIS DO JOGO ---
+// --- 2. NOVA LÓGICA PARA CARREGAR SINAIS AUTOMATICAMENTE ---
+
+async function carregarSinais() {
+    try {
+        // 1. Busca o conteúdo do nosso arquivo de índice
+        const response = await fetch('lista_sinais.txt');
+        const text = await response.text();
+
+        // 2. Transforma o texto em um array de nomes de arquivo, removendo linhas vazias
+        const nomesDosArquivos = text.split('\n').filter(nome => nome.trim() !== '');
+
+        // 3. Converte o array de nomes de arquivo no nosso array de objetos de sinais
+        TODOS_OS_SINAIS = nomesDosArquivos.map(nomeArquivo => {
+            // Remove a extensão .mp4
+            let resposta = nomeArquivo.replace('.mp4', '');
+            // Troca hífens por espaços
+            resposta = resposta.replace(/-/g, ' ');
+
+            return {
+                video: `sinais/${nomeArquivo}`,
+                resposta: resposta
+            };
+        });
+
+        console.log('Sinais carregados com sucesso:', TODOS_OS_SINAIS);
+
+    } catch (error) {
+        console.error('Erro ao carregar a lista de sinais:', error);
+        // Exibe uma mensagem de erro para o usuário caso o arquivo não seja encontrado
+        jogoContainer.innerHTML = '<p style="color: red;">Não foi possível carregar os sinais. Verifique o arquivo lista_sinais.txt.</p>';
+    }
+}
+
+
+// --- 3. FUNÇÕES PRINCIPAIS DO JOGO (praticamente inalteradas) ---
 
 function iniciarJogo() {
+    if (TODOS_OS_SINAIS.length < SINAIS_POR_RODADA) {
+        jogoContainer.innerHTML = `<p style="color: orange;">Não há sinais suficientes para iniciar uma rodada. Adicione pelo menos ${SINAIS_POR_RODADA} sinais.</p>`;
+        return;
+    }
+
     acertos = 0;
     indiceSinalAtual = 0;
 
@@ -36,6 +70,8 @@ function iniciarJogo() {
     mostrarProximoSinal();
 }
 
+// O resto das funções (mostrarProximoSinal, gerarOpcoes, verificarResposta, etc.)
+// permanecem exatamente as mesmas da versão anterior.
 function mostrarProximoSinal() {
     if (indiceSinalAtual < sinaisDaRodada.length) {
         const sinalAtual = sinaisDaRodada[indiceSinalAtual];
@@ -50,20 +86,17 @@ function mostrarProximoSinal() {
 }
 
 function gerarOpcoes() {
-    opcoesContainer.innerHTML = ''; // Limpa as opções anteriores
+    opcoesContainer.innerHTML = '';
     const respostaCorreta = sinaisDaRodada[indiceSinalAtual].resposta;
 
-    // Pega 3 respostas erradas aleatórias da lista principal
     const opcoesErradas = TODOS_OS_SINAIS
-        .filter(sinal => sinal.resposta !== respostaCorreta) // Garante que a resposta correta não seja uma das erradas
-        .sort(() => Math.random() - 0.5) // Embaralha
-        .slice(0, 3) // Pega as 3 primeiras
-        .map(sinal => sinal.resposta); // Pega apenas o texto da resposta
+        .filter(sinal => sinal.resposta !== respostaCorreta)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3)
+        .map(sinal => sinal.resposta);
 
-    // Junta a resposta correta com as erradas e embaralha de novo
     const todasAsOpcoes = [respostaCorreta, ...opcoesErradas].sort(() => Math.random() - 0.5);
 
-    // Cria um botão para cada opção
     todasAsOpcoes.forEach(opcaoTexto => {
         const botao = document.createElement('button');
         botao.textContent = opcaoTexto;
@@ -75,8 +108,6 @@ function gerarOpcoes() {
 
 function verificarResposta(botaoClicado, respostaCorreta) {
     const respostaUsuario = botaoClicado.textContent;
-
-    // Desabilita todos os botões para impedir cliques múltiplos
     const todosOsBotoes = document.querySelectorAll('.opcao-btn');
     todosOsBotoes.forEach(btn => btn.disabled = true);
 
@@ -89,7 +120,6 @@ function verificarResposta(botaoClicado, respostaCorreta) {
         botaoClicado.classList.add('errado');
         feedbackTexto.textContent = `Errado! A resposta era "${respostaCorreta}".`;
         feedbackTexto.style.color = 'red';
-        // Mostra qual era a resposta correta
         todosOsBotoes.forEach(btn => {
             if (btn.textContent === respostaCorreta) {
                 btn.classList.add('correto');
@@ -97,9 +127,8 @@ function verificarResposta(botaoClicado, respostaCorreta) {
         });
     }
 
-    // Passa para o próximo sinal depois de um intervalo
     indiceSinalAtual++;
-    setTimeout(mostrarProximoSinal, 2000); // Aumentei o tempo para o jogador ver o feedback
+    setTimeout(mostrarProximoSinal, 2000);
 }
 
 function mostrarPlacarFinal() {
@@ -108,7 +137,16 @@ function mostrarPlacarFinal() {
     placarFinalTexto.textContent = `Você acertou ${acertos} de ${SINAIS_POR_RODADA} sinais!`;
 }
 
+// --- 4. INICIALIZAÇÃO DO JOGO ---
 
-// --- 3. EVENTOS ---
-document.addEventListener('DOMContentLoaded', iniciarJogo);
+// Adiciona o evento para o botão de jogar novamente
 jogarNovamenteBtn.addEventListener('click', iniciarJogo);
+
+// Função principal que organiza o carregamento e início do jogo
+async function inicializar() {
+    await carregarSinais(); // Espera os sinais serem carregados
+    iniciarJogo();          // Só então inicia o jogo
+}
+
+// Inicia todo o processo quando a página carrega
+inicializar();
